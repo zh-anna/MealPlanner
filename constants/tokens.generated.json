@@ -1,0 +1,53 @@
+{
+  "colors": {
+    "brand": {
+      "yellow": "#F5D23D"
+    },
+    "bg": {
+      "canvas": "#FBF4EB",
+      "surface": "#FFFFFF",
+      "surfaceHigh": "#F5EFE6",
+      "pink": "#FCE8F1"
+    },
+    "text": {
+      "primary": "#1E1A16",
+      "secondary": "#6E655A",
+      "muted": "#9A9186",
+      "inverse": "#575B58",
+      "butter": "#FFEDA8",
+      "pink": "#F283AF"
+    },
+    "border": {
+      "subtle": "#E9E0D3",
+      "pink": "#F5C4D8"
+    }
+  },
+  "spacing": {
+    "xs": "4px",
+    "sm": "8px",
+    "md": "16px",
+    "lg": "20px",
+    "xl": "24px",
+    "xxl": "32px"
+  },
+  "borderRadius": {
+    "sm": "8px",
+    "md": "12px",
+    "lg": "16px",
+    "full": "999px"
+  },
+  "fontFamily": {
+    "heading": [
+      "Geologica_700Bold"
+    ],
+    "body": [
+      "Manrope_400Regular"
+    ],
+    "bodyMedium": [
+      "Manrope_500Medium"
+    ],
+    "bodyBold": [
+      "Manrope_700Bold"
+    ]
+  }
+}
