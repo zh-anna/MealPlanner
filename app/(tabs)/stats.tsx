@@ -15,6 +15,7 @@ import {
 import { LineChart } from 'react-native-gifted-charts';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ScreenHeader } from '@/components/screen-header';
 import { Card } from '@/components/ui/card';
 import { MSIcon } from '@/components/ui/ms-icon';
 import { UIText } from '@/components/ui/ui-text';
@@ -61,7 +62,6 @@ const chartYAxisTextStyle = {
   paddingRight: spacing.xs,
 };
 
-/** Позиція тултіпа LineChart (крайні точки не обрізаються). */
 function pointerTooltipTranslateX(
   pointerIndex: number | undefined,
   pointCount: number,
@@ -156,34 +156,37 @@ export default function StatsScreen() {
   }, []);
 
   const onAdd = () => {
-    const weightKg = parseDecimalInput(weightStr);
-    const chestCm = parseDecimalInput(chestStr);
-    const underbustCm = parseDecimalInput(underStr);
-    const waistCm = parseDecimalInput(waistStr);
-    const hipsCm = parseDecimalInput(hipsStr);
+    void (async () => {
+      const weightKg = parseDecimalInput(weightStr);
+      const chestCm = parseDecimalInput(chestStr);
+      const underbustCm = parseDecimalInput(underStr);
+      const waistCm = parseDecimalInput(waistStr);
+      const hipsCm = parseDecimalInput(hipsStr);
 
-    if (
-      weightKg == null &&
-      chestCm == null &&
-      underbustCm == null &&
-      waistCm == null &&
-      hipsCm == null
-    ) {
-      closeModal();
-      return;
-    }
+      if (
+        weightKg == null &&
+        chestCm == null &&
+        underbustCm == null &&
+        waistCm == null &&
+        hipsCm == null
+      ) {
+        closeModal();
+        return;
+      }
 
-    upsertEntry({
-      date: isoDate,
-      ...(weightKg != null ? { weightKg } : {}),
-      ...(chestCm != null ? { chestCm } : {}),
-      ...(underbustCm != null ? { underbustCm } : {}),
-      ...(waistCm != null ? { waistCm } : {}),
-      ...(hipsCm != null ? { hipsCm } : {}),
-    });
-
-    resetForm();
-    closeModal();
+      try {
+        await upsertEntry({
+          date: isoDate,
+          ...(weightKg != null ? { weightKg } : {}),
+          ...(chestCm != null ? { chestCm } : {}),
+          ...(underbustCm != null ? { underbustCm } : {}),
+          ...(waistCm != null ? { waistCm } : {}),
+          ...(hipsCm != null ? { hipsCm } : {}),
+        });
+        resetForm();
+        closeModal();
+      } catch {}
+    })();
   };
 
   const toPoints = (values: number[], labels: string[]) =>
@@ -212,16 +215,15 @@ export default function StatsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-bg-canvas" edges={['top', 'left', 'right']}>
+      <ScreenHeader
+        title="Статистика"
+        subtitle="Динаміка ваших ваги та обʼємів."
+      />
       <ScrollView
         className="flex-1 px-lg"
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ paddingBottom: insets.bottom + 96 }}
-        contentContainerClassName="pt-xl pb-xxl">
-        <UIText variant="h2">Статистика</UIText>
-        <UIText tone="secondary" variant="caption" className="mt-xs">
-          Вага та обʼєми (см). Дані зберігаються на пристрої.
-        </UIText>
-
+        contentContainerClassName="pb-xxl pt-md">
         <UIText variant="h3" className="mb-sm mt-xl">
           Вага
         </UIText>
@@ -525,7 +527,6 @@ export default function StatsScreen() {
   );
 }
 
-/** iOS/Android DateTimePicker: не масштабувати scaleX — псує типографіку. */
 function ModalInlineDatePicker({
   containerWidth,
   value,

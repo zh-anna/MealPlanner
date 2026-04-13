@@ -2,10 +2,16 @@ import { useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ScreenHeader } from '@/components/screen-header';
 import { Card } from '@/components/ui/card';
 import { MSIcon } from '@/components/ui/ms-icon';
 import { UIText } from '@/components/ui/ui-text';
 import { spacing } from '@/constants/tokens';
+import {
+  fetchShoppingChecks,
+  upsertShoppingCheckRemote,
+  type ShoppingChecksMap,
+} from '@/lib/db/shopping-sync';
 import {
   aggregateShoppingLines,
   dayIndicesFromTodayThroughWeekEnd,
@@ -13,8 +19,9 @@ import {
   type ShoppingLine,
 } from '@/lib/shopping';
 import {
-  dateForWeekDayIndex,
+  dateForDayInWeek,
   formatWeekdayDateUk,
+  isoMondayToLocalDate,
   weekdayIndexMondayFirst,
   WEEKDAY_LABELS_SHORT_UK,
 } from '@/lib/week';
@@ -24,13 +31,18 @@ type Scope = 'week' | 'day';
 
 export default function ShoppingScreen() {
   const insets = useSafeAreaInsets();
-  const { menu } = useMealPlanStore();
+  const calendarWeekStartIso = useMealPlanStore((s) => s.calendarWeekStartIso);
+  const weeks = useMealPlanStore((s) => s.weeks);
+  const bundle = weeks[calendarWeekStartIso];
+  const weekPlanId = bundle?.weekPlanId ?? null;
+
+  const weekMonday = useMemo(() => isoMondayToLocalDate(calendarWeekStartIso), [calendarWeekStartIso]);
 
   const todayIdx = weekdayIndexMondayFirst();
   const allowedDayIndices = useMemo(() => dayIndicesFromTodayThroughWeekEnd(todayIdx), [todayIdx]);
 
   const [scope, setScope] = useState<Scope>('week');
-  const [pickedDay, setPickedDay] = useState(todayIdx);
+  const [pickedDay, setPickedDay] = useState(() => todayIdx);
 
   useEffect(() => {
     if (!allowedDayIndices.includes(pickedDay)) {
@@ -43,36 +55,66 @@ export default function ShoppingScreen() {
     return pickedDay >= todayIdx && pickedDay <= 6 ? [pickedDay] : allowedDayIndices;
   }, [scope, allowedDayIndices, pickedDay, todayIdx]);
 
-  const lines = useMemo(
-    () => aggregateShoppingLines(menu, activeDayIndices),
-    [menu, activeDayIndices],
-  );
+  const lines = useMemo(() => {
+    const menu = bundle?.menu ?? [];
+    return aggregateShoppingLines(menu, activeDayIndices);
+  }, [bundle, activeDayIndices]);
 
-  const activeDaysKey = useMemo(() => activeDayIndices.join(','), [activeDayIndices]);
+  const scopeKey = scope === 'week' ? 'week_remaining' : `day:${pickedDay}`;
 
-  const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const [checksByScope, setChecksByScope] = useState<ShoppingChecksMap>({});
 
   useEffect(() => {
-    setChecked({});
-  }, [scope, pickedDay, activeDaysKey]);
+    if (!weekPlanId) {
+      setChecksByScope({});
+      return;
+    }
+    let cancelled = false;
+    fetchShoppingChecks(weekPlanId)
+      .then((m) => {
+        if (!cancelled) setChecksByScope(m);
+      })
+      .catch(() => {
+        if (!cancelled) setChecksByScope({});
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [weekPlanId]);
 
-  const toggle = (id: string) => {
-    setChecked((c) => ({ ...c, [id]: !c[id] }));
+  const checkedMap = checksByScope[scopeKey] ?? {};
+
+  const toggle = (lineId: string) => {
+    if (!weekPlanId) return;
+    const next = !checkedMap[lineId];
+    setChecksByScope((prev) => ({
+      ...prev,
+      [scopeKey]: { ...(prev[scopeKey] ?? {}), [lineId]: next },
+    }));
+    void upsertShoppingCheckRemote({
+      weekPlanId,
+      scopeKey,
+      lineKey: lineId,
+      isChecked: next,
+    }).catch(() => {
+      setChecksByScope((prev) => ({
+        ...prev,
+        [scopeKey]: { ...(prev[scopeKey] ?? {}), [lineId]: !next },
+      }));
+    });
   };
 
   const scopeLabel =
     scope === 'week'
       ? `З ${WEEKDAY_LABELS_SHORT_UK[todayIdx]} до кінця тижня`
-      : `${WEEKDAY_LABELS_SHORT_UK[pickedDay]}, ${formatWeekdayDateUk(dateForWeekDayIndex(pickedDay))}`;
+      : `${WEEKDAY_LABELS_SHORT_UK[pickedDay]}, ${formatWeekdayDateUk(dateForDayInWeek(pickedDay, weekMonday))}`;
 
   return (
     <SafeAreaView className="flex-1 bg-bg-canvas" edges={['top', 'left', 'right']}>
-      <View className="px-lg pt-xl">
-        <UIText variant="h2">Покупки</UIText>
-        <UIText tone="secondary" variant="caption" className="mt-xs">
-          Продукти з розкладу для обраного періоду.
-        </UIText>
-      </View>
+      <ScreenHeader
+        title="Покупки"
+        subtitle="Продукти з розкладу для обраного періоду."
+      />
 
       <View className="mt-md px-lg">
         <View className="flex-row gap-sm">
@@ -88,7 +130,7 @@ export default function ShoppingScreen() {
           className="mt-sm max-h-[48px] shrink-0 grow-0 pl-lg"
           contentContainerClassName="gap-sm pr-lg items-center">
           {allowedDayIndices.map((idx) => {
-            const d = dateForWeekDayIndex(idx);
+            const d = dateForDayInWeek(idx, weekMonday);
             const sel = pickedDay === idx;
             return (
               <Pressable
@@ -135,7 +177,7 @@ export default function ShoppingScreen() {
               <ShoppingRow
                 key={line.id}
                 line={line}
-                checked={!!checked[line.id]}
+                checked={!!checkedMap[line.id]}
                 onToggle={() => toggle(line.id)}
                 isLast={i === lines.length - 1}
               />
@@ -187,10 +229,10 @@ function ShoppingRow({
       accessibilityRole="checkbox"
       accessibilityState={{ checked }}
       className={[
-        'flex-row items-start gap-sm py-md',
+        'flex-row items-center gap-sm py-md',
         !isLast ? 'border-b border-border-subtle' : '',
       ].join(' ')}>
-      <View className="pt-xs">
+      <View>
         <MSIcon
           name={checked ? 'check_box' : 'check_box_outline_blank'}
           tone={checked ? 'brand' : 'muted'}
@@ -202,7 +244,7 @@ function ShoppingRow({
           {line.name}
         </UIText>
         {line.note ? (
-          <UIText tone="muted" variant="caption" >
+          <UIText tone="muted" variant="caption">
             {line.note}
           </UIText>
         ) : null}

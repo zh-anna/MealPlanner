@@ -17,6 +17,7 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { Platform, View } from 'react-native';
 
+import { AppDataGate } from '@/components/app-data-gate';
 import { colors } from '@/constants/tokens';
 import '../global.css';
 
@@ -39,7 +40,7 @@ export default function RootLayout() {
   if (!fontsLoaded) return <View style={{ flex: 1, backgroundColor: colors.cream }} />;
 
   return (
-    <>
+    <AppDataGate fontsLoaded={fontsLoaded}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
@@ -55,8 +56,16 @@ export default function RootLayout() {
             },
           }}
         />
+        <Stack.Screen
+          name="account"
+          options={{
+            headerShown: false,
+            presentation: 'card',
+            contentStyle: { backgroundColor: colors.cream },
+          }}
+        />
       </Stack>
       <StatusBar style="dark" />
-    </>
+    </AppDataGate>
   );
 }

@@ -103,7 +103,7 @@ export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
           marginBottom: bottom,
         }}>
         <View style={{ flexDirection: 'row', alignItems: 'stretch', gap: spacing.md }}>
-          <View style={{ flex: 1, minWidth: 0, justifyContent: 'center' }}>
+          <View style={{ flex: 1, minWidth: 0, justifyContent: 'center',}}>
             <TabBarSurface borderRadius={shellRadius}>{barChrome}</TabBarSurface>
           </View>
           <TabBarFabButton onPress={onAddMetrics} />
@@ -184,7 +184,6 @@ function TabBarFabButton({ onPress }: { onPress: () => void }) {
               name="add"
               size={tabBar.fabAddIconSize}
               weight={300}
-              className="pt-sm"
               iconColor={colors.butter}
             />
           </Pressable>

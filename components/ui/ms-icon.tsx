@@ -9,6 +9,7 @@ const MATERIAL_SYMBOLS_ROUNDED: Record<300 | 500, string> = {
 
 export type MSIconProps = Omit<TextProps, 'children'> & {
   iconColor?: string;
+  filled?: boolean;
   weight?: 300 | 500;
   name:
     | 'calendar_today'
@@ -23,7 +24,10 @@ export type MSIconProps = Omit<TextProps, 'children'> & {
     | 'bar_chart'
     | 'check_box'
     | 'check_box_outline_blank'
-    | 'add';
+    | 'add'
+    | 'account_circle'
+    | 'person_pin'
+    | 'arrow_back';
   size?: number;
   tone?: IconTone;
   className?: string;
@@ -38,7 +42,7 @@ const toneClass: Record<IconTone, string> = {
   butter: 'text-text-butter',
 };
 
-function opticalNudgeForAdd(name: MSIconProps['name'], px: number) {
+function opticalNudge(name: MSIconProps['name'], px: number) {
   if (name !== 'add') return undefined;
   return Platform.select({
     android: { textAlignVertical: 'center' as const },
@@ -52,11 +56,13 @@ export function MSIcon({
   size = 20,
   tone = 'primary',
   weight = 500,
+  filled = false,
   iconColor,
   className,
   style,
   ...props
 }: MSIconProps) {
+  const lineHeight = Math.round(size * 1.2);
   return (
     <Text
       {...props}
@@ -65,11 +71,12 @@ export function MSIcon({
         {
           fontFamily: MATERIAL_SYMBOLS_ROUNDED[weight],
           fontSize: size,
-          lineHeight: size,
+          lineHeight,
           textAlign: 'center',
           ...(Platform.OS === 'android' ? { includeFontPadding: false } : {}),
+          ...(filled ? { fontVariationSettings: "'FILL' 1" } : {}),
         },
-        opticalNudgeForAdd(name, size),
+        opticalNudge(name, size),
         iconColor ? { color: iconColor } : null,
         style,
       ]}>

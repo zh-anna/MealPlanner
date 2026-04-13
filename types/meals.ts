@@ -1,9 +1,11 @@
 export type MealType = 'breakfast' | 'lunch' | 'dinner';
 
 export type Ingredient = {
+  ingredientId: string;
   name: string;
   amount: number;
   unit: string;
+  grams: number | null;
   note?: string;
 };
 

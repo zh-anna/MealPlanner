@@ -4,8 +4,8 @@ import { twMerge } from 'tailwind-merge';
 import { Card } from '@/components/ui/card';
 import { MSIcon } from '@/components/ui/ms-icon';
 import { UIText } from '@/components/ui/ui-text';
-import { fitsGoals, totalsWithReplacement } from '@/lib/meals';
-import { dateForWeekDayIndex } from '@/lib/week';
+import { fitsGoals, REPLACE_MEAL_SLACK, totalsWithReplacement } from '@/lib/meals';
+import { dateForDayInWeek, isoMondayToLocalDate } from '@/lib/week';
 import { useMealPlanStore } from '@/stores/use-meal-plan-store';
 import type { DayPlan, Meal, MealType } from '@/types/meals';
 
@@ -17,6 +17,10 @@ function asMealType(value: unknown): MealType {
 function asDayIndex(value: unknown): number {
   const n = typeof value === 'string' ? Number(value) : NaN;
   return Number.isFinite(n) ? n : 0;
+}
+
+function asWeekStart(value: unknown, fallback: string): string {
+  return typeof value === 'string' && value.length > 0 ? value : fallback;
 }
 
 function MealReplaceCard({
@@ -39,9 +43,9 @@ function MealReplaceCard({
         'overflow-hidden',
       )}>
       <View className="flex-row items-stretch">
-        <View className="flex-1 pr-sm relative min-h-[72px]">
+        <View className="relative min-h-[72px] flex-1 pr-sm">
           {isCurrent ? (
-            <View className="absolute left-0 z-10 top-0">
+            <View className="absolute left-0 top-0 z-10">
               <UIText tone="pink" variant="label">
                 Поточна
               </UIText>
@@ -55,8 +59,8 @@ function MealReplaceCard({
           </View>
         </View>
 
-        <View className="w-[96px] items-center justify-center self-stretch border-l border-border-subtle pl-md ml-sm">
-          <UIText tone="secondary" variant="label" className="text-center mb-xs">
+        <View className="ml-sm w-[96px] items-center justify-center self-stretch border-l border-border-subtle pl-md">
+          <UIText tone="secondary" variant="label" className="mb-xs text-center">
             Тотал ккал
           </UIText>
           <UIText tone="brand" variant="bodyBold" className="text-center">
@@ -76,13 +80,30 @@ export default function ReplaceMealModal() {
   const dayIndex = asDayIndex(params.day);
   const type = asMealType(params.type);
 
-  const { data, menu, replaceMeal } = useMealPlanStore();
+  const calendarWeekStartIso = useMealPlanStore((s) => s.calendarWeekStartIso);
+  const weekStartIso = asWeekStart(params.weekStart, calendarWeekStartIso);
+  const data = useMealPlanStore((s) => s.data);
+  const weeks = useMealPlanStore((s) => s.weeks);
+  const replaceMeal = useMealPlanStore((s) => s.replaceMeal);
+
+  const menu = weeks[weekStartIso]?.menu ?? [];
   const day = menu[dayIndex];
-  const goals = data.userGoals;
+  const goals = data?.userGoals;
+
+  const weekMonday = isoMondayToLocalDate(weekStartIso);
+  const dayDate = dateForDayInWeek(dayIndex, weekMonday);
+
+  if (!data || goals == null) {
+    return (
+      <View className="flex-1 items-center justify-center bg-bg-canvas px-lg">
+        <UIText variant="bodyMedium">Завантаження…</UIText>
+      </View>
+    );
+  }
 
   if (!day) {
     return (
-      <View className="flex-1 bg-bg-canvas items-center justify-center px-lg">
+      <View className="flex-1 items-center justify-center bg-bg-canvas px-lg">
         <UIText variant="bodyBold">Невірний день</UIText>
         <TouchableOpacity onPress={() => router.back()} className="mt-md">
           <UIText tone="brand" variant="bodyBold">
@@ -95,10 +116,27 @@ export default function ReplaceMealModal() {
 
   const currentMeal = day[type];
   const candidates = data.meals[type];
-  const dayDate = dateForWeekDayIndex(dayIndex);
+
+  if (!currentMeal?.id) {
+    return (
+      <View className="flex-1 items-center justify-center bg-bg-canvas px-lg">
+        <UIText variant="bodyBold">Немає поточної страви</UIText>
+        <TouchableOpacity onPress={() => router.back()} className="mt-md">
+          <UIText tone="brand" variant="bodyBold">
+            Закрити
+          </UIText>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   const fittingCandidates = candidates.filter((m) =>
-    fitsGoals(totalsWithReplacement(day, type, m), goals),
+    fitsGoals(totalsWithReplacement(day, type, m), goals, {
+      calorieSlack: REPLACE_MEAL_SLACK.calories,
+      proteinSlack: REPLACE_MEAL_SLACK.protein,
+      fatSlack: REPLACE_MEAL_SLACK.fat,
+      carbsSlack: REPLACE_MEAL_SLACK.carbs,
+    }),
   );
   const otherMeals = fittingCandidates.filter((m) => m.id !== currentMeal.id);
 
@@ -109,7 +147,7 @@ export default function ReplaceMealModal() {
   };
 
   return (
-    <View className="flex-1 bg-bg-canvas pt-xxl overflow-hidden rounded-t-md">
+    <View className="flex-1 overflow-hidden rounded-t-md bg-bg-canvas pt-xxl">
       <View className="px-lg pb-md">
         <View className="flex-row items-center justify-between">
           <View className="flex-1 pr-md">
@@ -145,8 +183,9 @@ export default function ReplaceMealModal() {
                 key={m.id}
                 activeOpacity={0.7}
                 onPress={() => {
-                  replaceMeal(dayIndex, type, m);
-                  router.back();
+                  void replaceMeal({ dayIndex, type, meal: m, weekStartIso })
+                    .then(() => router.back())
+                    .catch(() => undefined);
                 }}
                 className="mb-sm">
                 <MealReplaceCard m={m} day={day} type={type} isCurrent={false} />

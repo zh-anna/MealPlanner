@@ -25,13 +25,20 @@ expo-env.d.ts
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+*.log
 
 # macOS
 .DS_Store
 *.pem
 
-# local env files
+# local env files (ніколи не комітити паролі, service_role, приватні ключі)
+.env
 .env*.local
+.env.production
+*.pem
+
+# локальні дампи каталогу страв (джерело правди — таблиці в Supabase)
+data/*.json
 
 # typescript
 *.tsbuildinfo

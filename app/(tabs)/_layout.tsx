@@ -9,14 +9,16 @@ import { useMealPlanStore } from '@/stores/use-meal-plan-store';
 export default function TabLayout() {
   const lastCalendarKey = useRef(calendarDateKeyLocal());
 
-  // Після півночі або довгого sleep: вирівняти selectedDay з календарем (меню persist не зберігає день).
   useEffect(() => {
     const syncSelectedDayIfDateChanged = () => {
       const now = new Date();
       const key = calendarDateKeyLocal(now);
       if (key !== lastCalendarKey.current) {
         lastCalendarKey.current = key;
-        useMealPlanStore.setState({ selectedDay: weekdayIndexMondayFirst(now) });
+        const { activeWeekStartIso, calendarWeekStartIso } = useMealPlanStore.getState();
+        if (activeWeekStartIso === calendarWeekStartIso) {
+          useMealPlanStore.setState({ selectedDay: weekdayIndexMondayFirst(now) });
+        }
       }
     };
 
