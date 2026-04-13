@@ -1,4 +1,3 @@
-// Builds constants/tokens.generated.json from the same values as constants/tokens.ts — keep both in sync.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,22 +5,25 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
-/** @type {const} */
 const colors = {
-  yellow: '#F5D23D',
-  black: '#575B58',
+  lime: '#798349',
+  black: '#3A3832',
   white: '#FFFFFF',
-  cream: '#FBF4EB',
+  cream: '#F4EFE6',
   butter: '#FFEDA8',
-  pink: '#F283AF',
-  surfacePink: '#FCE8F1',
+  emerald: '#2A4A3E',
+  sage: '#6B9078',
+  mint: '#7CB878',
+  olive: '#4D5348',
   surface: '#FFFFFF',
-  surfaceHigh: '#F5EFE6',
-  borderSubtle: '#E9E0D3',
-  borderPink: '#F5C4D8',
-  textPrimary: '#1E1A16',
-  textSecondary: '#6E655A',
-  textMuted: '#9A9186',
+  surfaceHigh: '#F7F2EA',
+  surfaceTint: '#EEF4E8',
+  borderSubtle: '#D4D1CA',
+  borderAccent: '#BAB7B0',
+  textPrimary: '#1C1B17',
+  textSecondary: '#5C574E',
+  textMuted: '#908B7E',
+  forest: '#062D1F',
 };
 
 const spacing = { xs: 4, sm: 8, md: 16, lg: 20, xl: 24, xxl: 32 };
@@ -44,12 +46,13 @@ function px(value) {
 
 const out = {
   colors: {
-    brand: { yellow: colors.yellow },
+    brand: { lime: colors.lime },
     bg: {
       canvas: colors.cream,
       surface: colors.surface,
       surfaceHigh: colors.surfaceHigh,
-      pink: colors.surfacePink,
+      tint: colors.surfaceTint,
+      butter: colors.butter,
     },
     text: {
       primary: colors.textPrimary,
@@ -57,11 +60,11 @@ const out = {
       muted: colors.textMuted,
       inverse: colors.black,
       butter: colors.butter,
-      pink: colors.pink,
+      accent: colors.emerald,
     },
     border: {
       subtle: colors.borderSubtle,
-      pink: colors.borderPink,
+      accent: colors.borderAccent,
     },
   },
   spacing: Object.fromEntries(Object.entries(spacing).map(([k, v]) => [k, px(v)])),

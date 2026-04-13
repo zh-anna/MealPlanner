@@ -12,7 +12,7 @@ import {
 import { ensureSharedUserSession } from '@/lib/auth/shared-sign-in';
 import { fetchProfile } from '@/lib/db/profile-sync';
 import { calendarDateKeyLocal, getCurrentWeekStartMonday, weekdayIndexMondayFirst } from '@/lib/week';
-import type { DayPlan, Meal, MealType, MealsData } from '@/types/meals';
+import type { Meal, MealType, MealsData } from '@/types/meals';
 
 type SyncStatus = 'idle' | 'loading' | 'ready' | 'error';
 

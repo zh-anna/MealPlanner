@@ -251,10 +251,10 @@ export default function StatsScreen() {
                 xAxisLabelsHeight={CHART_X_LABELS_HEIGHT}
                 xAxisLabelsVerticalShift={CHART_X_LABELS_SHIFT_Y}
                 xAxisTextNumberOfLines={2}
-                color={colors.pink}
+                color={colors.emerald}
                 thickness={2}
                 hideDataPoints={weightSeries.length > 10}
-                dataPointsColor={colors.pink}
+                dataPointsColor={colors.emerald}
                 dataPointsRadius={4}
                 xAxisLabelTextStyle={chartXAxisLabelTextStyle}
                 yAxisTextStyle={chartYAxisTextStyle}
@@ -263,7 +263,7 @@ export default function StatsScreen() {
                 rulesColor={colors.borderSubtle}
                 curved
                 areaChart
-                startFillColor={colors.surfacePink}
+                startFillColor={colors.surfaceTint}
                 endFillColor={colors.white}
                 disableScroll
                 pointerConfig={{
@@ -301,7 +301,7 @@ export default function StatsScreen() {
                         }}>
                         <ChartCallout
                           title={formatChartTooltipDate(pt.date)}
-                          lines={[[colors.pink, `Вага: ${pt.value.toFixed(1)} кг`]]}
+                          lines={[[colors.emerald, `Вага: ${pt.value.toFixed(1)} кг`]]}
                         />
                       </View>
                     );
@@ -324,10 +324,10 @@ export default function StatsScreen() {
         ) : (
           <>
             <View className="mb-sm flex-row flex-wrap gap-x-md gap-y-xs">
-              <Legend dot={colors.pink} label="Груди" on={volumeSeries.flags.chest} />
-              <Legend dot={colors.surfacePink} label="Під грудьми" on={volumeSeries.flags.underbust} />
-              <Legend dot={colors.yellow} label="Талія" on={volumeSeries.flags.waist} />
-              <Legend dot={colors.black} label="Бедра" on={volumeSeries.flags.hips} />
+              <Legend dot={colors.emerald} label="Груди" on={volumeSeries.flags.chest} />
+              <Legend dot={colors.sage} label="Під грудьми" on={volumeSeries.flags.underbust} />
+              <Legend dot={colors.butter} label="Талія" on={volumeSeries.flags.waist} />
+              <Legend dot={colors.olive} label="Бедра" on={volumeSeries.flags.hips} />
             </View>
             <View style={chartCardSurfaceStyle}>
               <View onLayout={onChartRowLayout} className="overflow-hidden">
@@ -349,10 +349,10 @@ export default function StatsScreen() {
                   xAxisLabelsHeight={CHART_X_LABELS_HEIGHT}
                   xAxisLabelsVerticalShift={CHART_X_LABELS_SHIFT_Y}
                   xAxisTextNumberOfLines={2}
-                  color={colors.pink}
-                  color2={colors.surfacePink}
-                  color3={colors.yellow}
-                  color4={colors.black}
+                  color={colors.emerald}
+                  color2={colors.sage}
+                  color3={colors.butter}
+                  color4={colors.olive}
                   thickness={volumeSeries.flags.chest ? 2 : 0}
                   thickness2={volumeSeries.flags.underbust ? 2 : 0}
                   thickness3={volumeSeries.flags.waist ? 2 : 0}
@@ -361,10 +361,10 @@ export default function StatsScreen() {
                   hideDataPoints2={!volumeSeries.flags.underbust}
                   hideDataPoints3={!volumeSeries.flags.waist}
                   hideDataPoints4={!volumeSeries.flags.hips}
-                  dataPointsColor1={colors.pink}
-                  dataPointsColor2={colors.surfacePink}
-                  dataPointsColor3={colors.yellow}
-                  dataPointsColor4={colors.black}
+                  dataPointsColor1={colors.emerald}
+                  dataPointsColor2={colors.sage}
+                  dataPointsColor3={colors.butter}
+                  dataPointsColor4={colors.olive}
                   dataPointsRadius1={4}
                   dataPointsRadius2={4}
                   dataPointsRadius3={4}
@@ -418,10 +418,10 @@ export default function StatsScreen() {
                           <ChartCallout
                             title={formatChartTooltipDate(iso)}
                             lines={[
-                              [colors.pink, `Груди: ${c.toFixed(1)} см`],
-                              [colors.surfacePink, `Під грудьми: ${u.toFixed(1)} см`],
-                              [colors.yellow, `Талія: ${w.toFixed(1)} см`],
-                              [colors.black, `Бедра: ${h.toFixed(1)} см`],
+                              [colors.emerald, `Груди: ${c.toFixed(1)} см`],
+                              [colors.sage, `Під грудьми: ${u.toFixed(1)} см`],
+                              [colors.butter, `Талія: ${w.toFixed(1)} см`],
+                              [colors.olive, `Бедра: ${h.toFixed(1)} см`],
                             ]}
                           />
                         </View>
@@ -435,8 +435,8 @@ export default function StatsScreen() {
         )}
         <Pressable
           onPress={openModal}
-          className="mt-lg items-center rounded-md bg-brand-yellow px-md py-md active:opacity-90">
-          <UIText variant="bodyBold" className="text-text-primary">
+          className="mt-lg items-center rounded-md bg-brand-lime px-md py-md active:opacity-90">
+          <UIText variant="bodyBold" tone="butter">
             Додати нові показники
           </UIText>
         </Pressable>
@@ -514,8 +514,8 @@ export default function StatsScreen() {
 
               <Pressable
                 onPress={onAdd}
-                className="mt-lg items-center rounded-md bg-brand-yellow px-md py-md active:opacity-90">
-                <UIText variant="bodyBold" className="text-text-primary">
+                className="mt-lg items-center rounded-md bg-brand-lime px-md py-md active:opacity-90">
+                <UIText variant="bodyBold" tone="butter">
                   Додати
                 </UIText>
               </Pressable>
@@ -560,7 +560,7 @@ function ModalInlineDatePicker({
         {...(Platform.OS === 'ios'
           ? {
             themeVariant: 'light' as const,
-            accentColor: colors.pink,
+            accentColor: colors.emerald,
             textColor: colors.textPrimary,
           }
           : {})}

@@ -32,7 +32,7 @@ constants/tokens.generated.json
 tailwind.config.js → NativeWind → components
 ```
 
-The color palette is a warm, earthy scheme built around a primary yellow (`#F5D23D`) and accent pink (`#F283AF`) on cream backgrounds. Typography uses Geologica for headings and Manrope for body text.
+The color palette uses a warm beige canvas (`#F4EFE6`), an olive brand accent (`#798349`), dark forest chrome for the tab bar (`#062D1F` reference), neutral warm borders (`#D4D1CA` / `#BAB7B0`), butter (`#FFEDA8`) for secondary controls and chart highlights, and supporting greens for data (e.g. emerald `#2A4A3E`, sage/mint). Typography uses Geologica for headings and Manrope for body text.
 
 The `UIText` component exposes a `tone` + `variant` API that keeps text styles consistent across screens without repeating style declarations:
 

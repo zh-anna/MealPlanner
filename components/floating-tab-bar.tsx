@@ -66,9 +66,9 @@ export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
     alignItems: 'stretch' as const,
     width: '100%' as const,
     minHeight: tabBar.rowMinHeight,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    gap: spacing.xs,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.xs,
+    gap: 0,
     borderWidth: hairlineWidth,
     borderColor: tabBar.barBorder,
   };
@@ -102,8 +102,8 @@ export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
           paddingRight: insets.right + insetH,
           marginBottom: bottom,
         }}>
-        <View style={{ flexDirection: 'row', alignItems: 'stretch', gap: spacing.md }}>
-          <View style={{ flex: 1, minWidth: 0, justifyContent: 'center',}}>
+        <View style={{ flexDirection: 'row', alignItems: 'stretch', gap: tabBar.fabGap }}>
+          <View style={{ flex: 1, minWidth: 0, justifyContent: 'center' }}>
             <TabBarSurface borderRadius={shellRadius}>{barChrome}</TabBarSurface>
           </View>
           <TabBarFabButton onPress={onAddMetrics} />
@@ -201,7 +201,7 @@ function TabItemContent({
   fg: string;
 }) {
   return (
-    <View style={{ maxWidth: '100%', alignItems: 'center' }}>
+    <View style={{ maxWidth: '100%', alignItems: 'center', paddingVertical: spacing.xs }}>
       <MSIcon name={meta.icon} size={tabBar.iconSize} iconColor={fg} />
       <Text
         style={{
@@ -228,7 +228,7 @@ function TabItem({
   isFocused: boolean;
   onPress: () => void;
 }) {
-  const fg = isFocused ? tabBar.activeOnPill : colors.butter;
+  const fg = colors.butter;
   const r = tabBar.activeRadius;
 
   return (
@@ -250,7 +250,7 @@ function TabItem({
         })}>
         <View
           style={{
-            paddingVertical: spacing.sm,
+            paddingVertical: spacing.xs,
             paddingHorizontal: spacing.xs,
             borderRadius: r,
             backgroundColor: isFocused ? tabBar.activeSegmentBg : 'transparent',

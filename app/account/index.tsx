@@ -223,7 +223,7 @@ export default function AccountScreen() {
           <ScreenHeader title="Акаунт" subtitle="Профіль і розклад" left={backControl} right={null} />
 
           {savedVisible ? (
-            <View className="border-b border-border-subtle bg-bg-pink px-lg py-sm">
+            <View className="border-b border-border-subtle bg-bg-tint px-lg py-sm">
               <UIText variant="bodyMedium" className="text-center text-text-primary">
                 Збережено
               </UIText>
@@ -302,11 +302,11 @@ export default function AccountScreen() {
               <Pressable
                 onPress={() => void saveProfile()}
                 disabled={!userId || saving || !dirty}
-                className="mt-lg items-center rounded-md bg-brand-yellow px-md py-md active:opacity-90 disabled:opacity-50">
+                className="mt-lg items-center rounded-md bg-brand-lime px-md py-md active:opacity-90 disabled:opacity-50">
                 {saving ? (
-                  <ActivityIndicator color={colors.textPrimary} />
+                  <ActivityIndicator color={colors.butter} />
                 ) : (
-                  <UIText variant="bodyBold" className="text-text-primary">
+                  <UIText variant="bodyBold" tone="butter">
                     Зберегти
                   </UIText>
                 )}
@@ -324,7 +324,7 @@ export default function AccountScreen() {
               <Pressable
                 onPress={onGenerateNext}
                 disabled={generating || saving}
-                className="items-center rounded-md border border-border-subtle bg-bg-surface px-md py-md active:opacity-90 disabled:opacity-50">
+                className="items-center rounded-md border border-border-subtle bg-bg-butter px-md py-md active:opacity-90 disabled:opacity-50">
                 {generating ? (
                   <ActivityIndicator color={colors.textPrimary} />
                 ) : (

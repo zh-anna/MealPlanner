@@ -1,25 +1,26 @@
 {
   "colors": {
     "brand": {
-      "yellow": "#F5D23D"
+      "lime": "#798349"
     },
     "bg": {
-      "canvas": "#FBF4EB",
+      "canvas": "#F4EFE6",
       "surface": "#FFFFFF",
-      "surfaceHigh": "#F5EFE6",
-      "pink": "#FCE8F1"
+      "surfaceHigh": "#F7F2EA",
+      "tint": "#EEF4E8",
+      "butter": "#FFEDA8"
     },
     "text": {
-      "primary": "#1E1A16",
-      "secondary": "#6E655A",
-      "muted": "#9A9186",
-      "inverse": "#575B58",
+      "primary": "#1C1B17",
+      "secondary": "#5C574E",
+      "muted": "#908B7E",
+      "inverse": "#3A3832",
       "butter": "#FFEDA8",
-      "pink": "#F283AF"
+      "accent": "#2A4A3E"
     },
     "border": {
-      "subtle": "#E9E0D3",
-      "pink": "#F5C4D8"
+      "subtle": "#D4D1CA",
+      "accent": "#BAB7B0"
     }
   },
   "spacing": {

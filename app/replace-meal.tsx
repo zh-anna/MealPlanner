@@ -39,34 +39,54 @@ function MealReplaceCard({
   return (
     <Card
       className={twMerge(
-        isCurrent ? 'border-border-pink bg-bg-pink' : 'bg-bg-surface border-border-subtle',
+        isCurrent
+          ? 'border-white/30 bg-brand-lime'
+          : 'border-border-subtle bg-bg-surface',
         'overflow-hidden',
       )}>
       <View className="flex-row items-stretch">
         <View className="relative min-h-[72px] flex-1 pr-sm">
           {isCurrent ? (
             <View className="absolute left-0 top-0 z-10">
-              <UIText tone="pink" variant="label">
+              <UIText tone="butter" variant="label">
                 Поточна
               </UIText>
             </View>
           ) : null}
           <View className={isCurrent ? 'pt-xl' : ''}>
-            <UIText variant="bodyBold">{m.name}</UIText>
-            <UIText tone="muted" variant="caption" className="mt-xs">
+            <UIText variant="bodyBold" tone={isCurrent ? 'butter' : 'primary'}>
+              {m.name}
+            </UIText>
+            <UIText
+              tone={isCurrent ? 'butter' : 'muted'}
+              variant="caption"
+              className={['mt-xs', isCurrent ? 'opacity-90' : ''].filter(Boolean).join(' ')}>
               {m.calories} ккал · Б {m.protein} · Ж {m.fat} · В {m.carbs}
             </UIText>
           </View>
         </View>
 
-        <View className="ml-sm w-[96px] items-center justify-center self-stretch border-l border-border-subtle pl-md">
-          <UIText tone="secondary" variant="label" className="mb-xs text-center">
+        <View
+          className={twMerge(
+            'ml-sm w-[96px] items-center justify-center self-stretch border-l pl-md',
+            isCurrent ? 'border-white/25' : 'border-border-subtle',
+          )}>
+          <UIText
+            tone={isCurrent ? 'butter' : 'secondary'}
+            variant="label"
+            className={['mb-xs text-center', isCurrent ? 'opacity-90' : ''].filter(Boolean).join(' ')}>
             Тотал ккал
           </UIText>
-          <UIText tone="brand" variant="bodyBold" className="text-center">
+          <UIText
+            tone={isCurrent ? 'butter' : 'brand'}
+            variant="bodyBold"
+            className="text-center">
             {nextTotals.calories}
           </UIText>
-          <UIText tone="muted" variant="caption" className="text-center">
+          <UIText
+            tone={isCurrent ? 'butter' : 'muted'}
+            variant="caption"
+            className={['text-center', isCurrent ? 'opacity-85' : ''].filter(Boolean).join(' ')}>
             за день
           </UIText>
         </View>

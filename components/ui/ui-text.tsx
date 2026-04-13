@@ -1,6 +1,6 @@
 import { Platform, Text as RNText, type TextProps as RNTextProps } from 'react-native';
 
-type TextTone = 'primary' | 'secondary' | 'muted' | 'inverse' | 'brand' | 'butter' | 'pink';
+type TextTone = 'primary' | 'secondary' | 'muted' | 'inverse' | 'brand' | 'butter' | 'accent';
 type TextVariant = 'h1' | 'h2' | 'h3' | 'body' | 'bodyMedium' | 'bodyBold' | 'caption' | 'label';
 
 export type UITextProps = RNTextProps & {
@@ -13,9 +13,9 @@ const toneClass: Record<TextTone, string> = {
   secondary: 'text-text-secondary',
   muted: 'text-text-muted',
   inverse: 'text-text-inverse',
-  brand: 'text-brand-yellow',
+  brand: 'text-brand-lime',
   butter: 'text-text-butter',
-  pink: 'text-text-pink',
+  accent: 'text-text-accent',
 };
 
 const variantClass: Record<TextVariant, string> = {

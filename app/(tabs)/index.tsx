@@ -70,16 +70,16 @@ export default function WeekScreen() {
               onPress={() => void selectScheduleSlot(weekStartIso, dayIndex)}
               className={[
                 'self-start rounded-md px-md py-sm',
-                sel ? 'bg-brand-yellow' : 'bg-bg-surfaceHigh border border-border-subtle',
+                sel ? 'bg-brand-lime' : 'bg-bg-surfaceHigh border border-border-subtle',
               ].join(' ')}>
               <View className="items-center">
                 <UIText
-                  tone={sel ? 'inverse' : 'secondary'}
+                  tone={sel ? 'butter' : 'secondary'}
                   variant="bodyMedium"
                   className="text-[14px] leading-[18px]">
                   {m.day}
                 </UIText>
-                <UIText tone={sel ? 'inverse' : 'muted'} variant="label" className="mt-[2px]">
+                <UIText tone={sel ? 'butter' : 'muted'} variant="label" className="mt-[2px]">
                   {date.getDate()}
                 </UIText>
               </View>

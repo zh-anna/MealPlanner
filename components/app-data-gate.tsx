@@ -61,8 +61,10 @@ export function AppDataGate({ fontsLoaded, children }: Props) {
         </UIText>
         <Pressable
           onPress={() => void bootstrap()}
-          className="self-center rounded-md bg-brand-yellow px-lg py-md active:opacity-90">
-          <UIText variant="bodyBold">Спробувати знову</UIText>
+          className="self-center rounded-md bg-brand-lime px-lg py-md active:opacity-90">
+          <UIText variant="bodyBold" tone="butter">
+            Спробувати знову
+          </UIText>
         </Pressable>
       </View>
     );

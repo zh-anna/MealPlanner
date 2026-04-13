@@ -10,7 +10,7 @@ export type StatProps = ViewProps & {
 export function Stat({ label, value, className, ...props }: StatProps & { className?: string }) {
   return (
     <View {...props} className={['items-center', className].filter(Boolean).join(' ')}>
-      <UIText tone="pink" variant="bodyBold" className="text-[18px] leading-[22px]">
+      <UIText tone="brand" variant="bodyBold" className="text-[22px] leading-[26px] tracking-tight">
         {value}
       </UIText>
       <UIText tone="secondary" variant="label" className="mt-0.5">

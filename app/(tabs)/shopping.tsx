@@ -138,9 +138,9 @@ export default function ShoppingScreen() {
                 onPress={() => setPickedDay(idx)}
                 className={[
                   'rounded-md px-md py-sm',
-                  sel ? 'bg-brand-yellow' : 'bg-bg-surfaceHigh border border-border-subtle',
+                  sel ? 'bg-brand-lime' : 'bg-bg-surfaceHigh border border-border-subtle',
                 ].join(' ')}>
-                <UIText tone={sel ? 'inverse' : 'secondary'} variant="bodyMedium" className="text-[14px]">
+                <UIText tone={sel ? 'butter' : 'secondary'} variant="bodyMedium" className="text-[14px]">
                   {WEEKDAY_LABELS_SHORT_UK[idx]} {d.getDate()}
                 </UIText>
               </Pressable>
@@ -203,9 +203,9 @@ function ScopeChip({
       onPress={onPress}
       className={[
         'flex-1 rounded-md px-md py-sm',
-        active ? 'bg-brand-yellow' : 'border border-border-subtle bg-bg-surfaceHigh',
+        active ? 'bg-brand-lime' : 'border border-border-subtle bg-bg-surfaceHigh',
       ].join(' ')}>
-      <UIText variant="label" tone={active ? 'inverse' : 'secondary'} className="text-center">
+      <UIText variant="label" tone={active ? 'butter' : 'secondary'} className="text-center">
         {label}
       </UIText>
     </Pressable>

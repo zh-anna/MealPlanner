@@ -12,7 +12,6 @@ module.exports = {
       fontFamily: tokens.fontFamily,
     },
   },
-  // Гарантуємо генерацію утиліт p-/m- з кастомної шкали (xs…xxl), щоб pt-xl тощо завжди працювали.
   safelist: [
     {
       pattern:

@@ -29,13 +29,14 @@ yarn-error.*
 
 # macOS
 .DS_Store
+
+# Secrets
 *.pem
 
-# local env files (ніколи не комітити паролі, service_role, приватні ключі)
+# Local env (commit only .env.example)
 .env
-.env*.local
-.env.production
-*.pem
+.env.*
+!.env.example
 
 # локальні дампи каталогу страв (джерело правди — таблиці в Supabase)
 data/*.json

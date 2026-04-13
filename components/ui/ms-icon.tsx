@@ -38,18 +38,9 @@ const toneClass: Record<IconTone, string> = {
   secondary: 'text-text-secondary',
   muted: 'text-text-muted',
   inverse: 'text-text-inverse',
-  brand: 'text-brand-yellow',
+  brand: 'text-brand-lime',
   butter: 'text-text-butter',
 };
-
-function opticalNudge(name: MSIconProps['name'], px: number) {
-  if (name !== 'add') return undefined;
-  return Platform.select({
-    android: { textAlignVertical: 'center' as const },
-    ios: { transform: [{ translateY: Math.max(1, Math.round(px * 0.12)) }] },
-    default: { transform: [{ translateY: Math.max(1, Math.round(px * 0.1)) }] },
-  });
-}
 
 export function MSIcon({
   name,
@@ -73,10 +64,9 @@ export function MSIcon({
           fontSize: size,
           lineHeight,
           textAlign: 'center',
-          ...(Platform.OS === 'android' ? { includeFontPadding: false } : {}),
+          ...(Platform.OS === 'android' ? { includeFontPadding: false, textAlignVertical: 'center' } : {}),
           ...(filled ? { fontVariationSettings: "'FILL' 1" } : {}),
         },
-        opticalNudge(name, size),
         iconColor ? { color: iconColor } : null,
         style,
       ]}>
